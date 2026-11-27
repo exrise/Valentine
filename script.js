@@ -259,9 +259,8 @@
       var d = parseStart(o.start);
       var b = document.createElement('button');
       b.type = 'button'; b.className = 'option' + (cur === idx ? ' selected' : '');
-      var e = document.createElement('span'); e.className = 'emoji'; e.textContent = '📅';
       var l = document.createElement('span'); l.textContent = fmtDay(d);
-      b.appendChild(e); b.appendChild(l);
+      b.appendChild(l);
       var ds = document.createElement('span'); ds.className = 'desc';
       ds.textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()) + (o.weather ? ' · ' + o.weather.emoji + ' ' + o.weather.text : '');
       b.appendChild(ds);
