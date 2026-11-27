@@ -1,22 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Will You Be My Valentine?</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>У меня к тебе вопрос 💌</title>
+    <meta name="description" content="Открой — тут вопрос только для тебя.">
+    <!-- Превью ссылки в мессенджерах. Мессенджеры не запускают JS, поэтому текст меняется только здесь. -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="У меня к тебе вопрос 💌">
+    <meta property="og:description" content="Открой — тут вопрос только для тебя.">
+    <meta property="og:image" content="https://exrise.github.io/Valentine/images/preview.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="theme-color" content="#fde8ec">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Will you be my Valentine?</h1>
-        <div class="buttons">
-            <button class="yes-button" onclick="handleYesClick()">Yes</button>
-            <button class="no-button" onclick="handleNoClick()">No</button>
-        </div>
-        <div class="gif_container">
-            <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbW5lenZyZHI5OXM2eW95b3pmMG40cWVrMDhtNjVuM3A4dGNxa2g2dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/VM1fcpu2bKs1e2Kdbj/giphy.gif" alt="Cute GIF">
+    <div class="bg-hearts" aria-hidden="true"></div>
+    <canvas id="confetti" aria-hidden="true"></canvas>
+
+    <header id="topbar" class="topbar" hidden>
+        <button id="back" class="icon-btn" type="button" aria-label="Назад">←</button>
+        <div class="progress"><div id="progress-bar"></div></div>
+        <span id="progress-label" class="progress-label"></span>
+    </header>
+
+    <main>
+        <!-- 1. Вопрос -->
+        <section id="screen-question" class="screen" data-screen="question">
+            <img id="photo-question" class="photo" alt="" hidden>
+            <h1 id="question-text"></h1>
+            <div class="buttons">
+                <button id="yes-btn" class="btn yes" type="button">Да</button>
+                <span id="no-slot" class="no-slot"><button id="no-btn" class="btn no" type="button">Нет</button></span>
+            </div>
+        </section>
+
+        <!-- 2. Праздник -->
+        <section id="screen-celebrate" class="screen" data-screen="celebrate">
+            <img id="photo-yes" class="photo" alt="" hidden>
+            <h1 id="yes-title"></h1>
+            <p id="yes-text" class="lead"></p>
+            <button id="go-btn" class="btn yes" type="button">Поехали 🚀</button>
+        </section>
+
+        <!-- 3. Шаг выбора (шаблон, переиспользуется) -->
+        <section id="screen-step" class="screen" data-screen="step">
+            <h2 id="step-title"></h2>
+            <div id="options" class="options"></div>
+            <p id="reaction" class="reaction" aria-live="polite"></p>
+            <button id="random-btn" class="btn ghost" type="button">Не могу выбрать 🎡</button>
+            <button id="next-btn" class="btn yes" type="button" disabled>Дальше</button>
+        </section>
+
+        <!-- 4. Дата -->
+        <section id="screen-date" class="screen" data-screen="date">
+            <h2>Когда встречаемся?</h2>
+            <div class="date-card">
+                <div id="date-day" class="date-day"></div>
+                <div id="date-time" class="date-time"></div>
+            </div>
+            <p id="date-note" class="lead"></p>
+            <button id="date-ok" class="btn yes" type="button">Договорились 💕</button>
+        </section>
+
+        <!-- 5. Билет -->
+        <section id="screen-ticket" class="screen" data-screen="ticket">
+            <h2>Наш билет на свидание 🎟️</h2>
+            <div class="ticket">
+                <dl id="ticket-list"></dl>
+            </div>
+            <p id="send-hint" class="lead small"></p>
+            <div class="stack">
+                <a id="send-tg" class="btn yes" target="_blank" rel="noopener">Отправить в Telegram ✈️</a>
+                <a id="send-wa" class="btn yes alt" target="_blank" rel="noopener" hidden>Отправить в WhatsApp 💬</a>
+                <button id="copy-btn" class="btn ghost" type="button">Скопировать текст 📋</button>
+                <textarea id="copy-area" class="copy-area" readonly rows="5" hidden></textarea>
+                <a id="cal-google" class="btn ghost" target="_blank" rel="noopener">Добавить в Google Календарь 📅</a>
+                <button id="cal-ics" class="link-btn" type="button">Скачать .ics (для Apple Календаря)</button>
+                <button id="restart-btn" class="link-btn" type="button">Изменить выбор</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Колесо фортуны -->
+    <div id="wheel-modal" class="modal" hidden>
+        <div class="modal-box">
+            <div class="wheel-wrap">
+                <div class="pointer" aria-hidden="true">▼</div>
+                <canvas id="wheel" width="600" height="600"></canvas>
+            </div>
+            <button id="spin-btn" class="btn yes" type="button">Крутить!</button>
+            <button id="wheel-close" class="link-btn" type="button">Закрыть</button>
         </div>
     </div>
+
+    <script src="config.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
