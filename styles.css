@@ -4,7 +4,7 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f9e3e3;
+    background-color: #fde8ec;
     font-family: 'Arial', sans-serif;
     flex-direction: column;
   }
@@ -46,6 +46,5 @@ body {
   .gif_container img {
     max-width: 100%;
     height: auto;
-    border-radius: 10px;
     margin-top: 20px;
   }
