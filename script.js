@@ -8,19 +8,25 @@
   function fill(tpl) { return String(tpl).replace(/\{name\}/g, C.name); }
   function pad(n) { return (n < 10 ? '0' : '') + n; }
   function hash(s) { var h = 0; for (var i = 0; i < s.length; i++) { h = (h * 31 + s.charCodeAt(i)) | 0; } return String(h); }
-  var STORE_KEY = 'valentine:' + hash(JSON.stringify(C.steps) + C.date.start + C.name);
+  var STORE_KEY = 'valentine:' + hash(JSON.stringify(C.steps) + JSON.stringify(C.date.options) + C.name);
   function load() { try { return JSON.parse(localStorage.getItem(STORE_KEY)) || null; } catch (e) { return null; } }
   function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify({ at: state.at, answers: state.answers })); } catch (e) {} }
   function clearSave() { try { localStorage.removeItem(STORE_KEY); } catch (e) {} }
   function vibrate(p) { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} }
 
-  function parseStart() {
-    var m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(C.date.start);
+  function parseStart(str) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(str);
     return new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]);
   }
-  var start = parseStart();
-  var end = new Date(start.getTime() + (C.date.durationMinutes || 120) * 60000);
-  function dayText() { return new Intl.DateTimeFormat('ru', { weekday: 'long', day: 'numeric', month: 'long' }).format(start); }
+  var start, end, curWeather;
+  function applyDate(idx) {
+    var o = C.date.options[idx] || C.date.options[0];
+    start = parseStart(o.start);
+    end = new Date(start.getTime() + (C.date.durationMinutes || 120) * 60000);
+    curWeather = o.weather || null;
+  }
+  function fmtDay(d) { return new Intl.DateTimeFormat('ru', { weekday: 'long', day: 'numeric', month: 'long' }).format(d); }
+  function dayText() { return fmtDay(start); }
   function timeText() { return pad(start.getHours()) + ':' + pad(start.getMinutes()); }
   function floating(d) { return d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + 'T' + pad(d.getHours()) + pad(d.getMinutes()) + '00'; }
 
@@ -77,11 +83,12 @@
   // ---------- состояние и экраны ----------
   var flow = [{ t: 'question' }, { t: 'celebrate' }];
   C.steps.forEach(function (s, i) { flow.push({ t: 'step', i: i }); });
-  flow.push({ t: 'date' }, { t: 'ticket' });
-  var totalSteps = C.steps.length + 1; // шаги + дата
+  flow.push({ t: 'datepick' }, { t: 'date' }, { t: 'ticket' });
+  var totalSteps = C.steps.length + 2; // шаги + выбор даты + подтверждение
 
   var saved = load();
   var state = { at: 0, answers: (saved && saved.answers) || {} };
+  applyDate(state.answers.date);
 
   function show(at) {
     state.at = at; save();
@@ -90,10 +97,11 @@
     $('screen-' + f.t).classList.add('active');
     var bar = $('topbar');
     bar.hidden = (f.t === 'question' || f.t === 'celebrate');
-    var n = f.t === 'step' ? f.i + 1 : f.t === 'date' ? totalSteps : totalSteps;
+    var n = f.t === 'step' ? f.i + 1 : f.t === 'datepick' ? totalSteps - 1 : totalSteps;
     $('progress-bar').style.width = (f.t === 'ticket' ? 100 : (n - 1) / totalSteps * 100 + 100 / totalSteps * 0.5) + '%';
     $('progress-label').textContent = f.t === 'ticket' ? 'Готово 💕' : 'Шаг ' + n + ' из ' + totalSteps;
     if (f.t === 'step') renderStep(f.i);
+    if (f.t === 'datepick') renderDatePick();
     if (f.t === 'date') renderDate();
     if (f.t === 'ticket') renderTicket();
     window.scrollTo(0, 0);
@@ -242,14 +250,44 @@
     })(t0);
   });
 
-  // ---------- 4. дата ----------
+  // ---------- 4. выбор даты ----------
+  function renderDatePick() {
+    $('datepick-title').textContent = C.date.title || 'Когда встретимся?';
+    var box = $('date-options'); box.textContent = '';
+    var cur = state.answers.date;
+    C.date.options.forEach(function (o, idx) {
+      var d = parseStart(o.start);
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'option' + (cur === idx ? ' selected' : '');
+      var l = document.createElement('span'); l.textContent = fmtDay(d);
+      b.appendChild(l);
+      var ds = document.createElement('span'); ds.className = 'desc';
+      ds.textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()) + (o.weather ? ' · ' + o.weather.emoji + ' ' + o.weather.text : '');
+      b.appendChild(ds);
+      b.addEventListener('click', function () { chooseDate(idx); });
+      box.appendChild(b);
+    });
+    $('datepick-next').disabled = cur === undefined;
+    $('datepick-reaction').textContent = cur !== undefined ? 'Отличный выбор!' : '';
+  }
+  function chooseDate(idx) {
+    state.answers.date = idx; save(); applyDate(idx);
+    Array.prototype.forEach.call($('date-options').children, function (el, k) { el.classList.toggle('selected', k === idx); });
+    $('datepick-reaction').textContent = 'Отличный выбор!';
+    $('datepick-next').disabled = false;
+    try { $('datepick-next').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' }); } catch (e) {}
+    vibrate(10); confetti(14);
+  }
+  $('datepick-next').addEventListener('click', next);
+
+  // ---------- 4б. подтверждение даты ----------
   function renderDate() {
     $('date-day').textContent = dayText();
     $('date-time').textContent = timeText();
     $('date-note').textContent = C.date.note || '';
     var w = $('date-weather');
-    w.hidden = !C.weather;
-    if (C.weather) w.textContent = C.weather.emoji + ' ' + C.weather.text;
+    w.hidden = !curWeather;
+    if (curWeather) w.textContent = curWeather.emoji + ' ' + curWeather.text;
   }
   $('date-ok').addEventListener('click', function () { confetti(80); vibrate([30, 40, 30]); next(); });
 
@@ -276,7 +314,7 @@
       var a = state.answers[s.id]; if (a === undefined) return;
       row(dl, s.short || s.title, s.options[a].emoji + ' ' + s.options[a].label);
     });
-    if (C.weather) row(dl, 'Погода', C.weather.emoji + ' ' + C.weather.text);
+    if (curWeather) row(dl, 'Погода', curWeather.emoji + ' ' + curWeather.text);
     row(dl, 'Место', C.placeText);
     if (C.date.note) row(dl, 'P.S.', C.date.note);
 
@@ -310,7 +348,7 @@
     var now = new Date();
     var stamp = now.getUTCFullYear() + pad(now.getUTCMonth() + 1) + pad(now.getUTCDate()) + 'T' + pad(now.getUTCHours()) + pad(now.getUTCMinutes()) + pad(now.getUTCSeconds()) + 'Z';
     var lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Valentine//RU', 'CALSCALE:GREGORIAN', 'BEGIN:VEVENT',
-      'UID:' + hash(C.date.start + C.name) + '-' + stamp + '@valentine', 'DTSTAMP:' + stamp,
+      'UID:' + hash(C.date.options[state.answers.date || 0].start + C.name) + '-' + stamp + '@valentine', 'DTSTAMP:' + stamp,
       'DTSTART:' + floating(start), 'DTEND:' + floating(end),
       'SUMMARY:' + icsEscape('Свидание 💕'), 'DESCRIPTION:' + icsEscape(choicesLines().join('\n')),
       'LOCATION:' + icsEscape('Сюрприз'), 'END:VEVENT', 'END:VCALENDAR'];
