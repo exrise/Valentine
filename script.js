@@ -316,6 +316,7 @@
     });
     if (curWeather) row(dl, 'Погода', curWeather.emoji + ' ' + curWeather.text);
     row(dl, 'Место', C.placeText);
+    if (C.afterText) row(dl, 'После ужина', C.afterText);
     if (C.date.note) row(dl, 'P.S.', C.date.note);
 
     var text = messageText(), enc = encodeURIComponent(text);
