@@ -124,6 +124,6 @@ h2 { font-size: clamp(1.4rem, 6vw, 1.9rem); line-height: 1.25; margin: 0; color:
 @media (max-width: 340px) { .option { padding: 14px 8px; } .option .desc { font-size: .7rem; } }
 .options.one-col { grid-template-columns: 1fr; }
 .options.one-col .option { min-height: 84px; }
-.task { width: 100%; box-sizing: border-box; padding: 14px 16px; background: var(--card); border: 2px dashed #ffb3c1; border-radius: 16px; box-shadow: 0 3px 10px rgba(180,42,71,.10); text-align: center; }
+.task { width: 100%; margin-top: 4px; box-sizing: border-box; padding: 14px 16px; background: var(--card); border: 2px dashed #ffb3c1; border-radius: 16px; box-shadow: 0 3px 10px rgba(180,42,71,.10); text-align: center; }
 .task-title { font-weight: 800; color: var(--accent); margin-bottom: 4px; }
 .task-text { font-size: .95rem; line-height: 1.35; color: var(--muted); }
