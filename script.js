@@ -82,7 +82,6 @@
 
   var saved = load();
   var state = { at: 0, answers: (saved && saved.answers) || {} };
-  if (saved && typeof saved.at === 'number' && saved.at > 0 && saved.at < flow.length) state.at = saved.at;
 
   function show(at) {
     state.at = at; save();
