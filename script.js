@@ -245,6 +245,9 @@
     $('date-day').textContent = dayText();
     $('date-time').textContent = timeText();
     $('date-note').textContent = C.date.note || '';
+    var w = $('date-weather');
+    w.hidden = !C.weather;
+    if (C.weather) w.textContent = C.weather.emoji + ' ' + C.weather.text;
   }
   $('date-ok').addEventListener('click', function () { confetti(80); vibrate([30, 40, 30]); next(); });
 
@@ -271,6 +274,7 @@
       var a = state.answers[s.id]; if (a === undefined) return;
       row(dl, s.short || s.title, s.options[a].emoji + ' ' + s.options[a].label);
     });
+    if (C.weather) row(dl, 'Погода', C.weather.emoji + ' ' + C.weather.text);
     row(dl, 'Место', C.placeText);
     if (C.date.note) row(dl, 'P.S.', C.date.note);
 
