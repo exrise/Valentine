@@ -140,7 +140,7 @@
     for (var i = 0; i < 40 && !ok; i++) {
       x = vp.x + m + Math.random() * (maxX - m);
       y = vp.y + m + Math.random() * (maxY - m);
-      ok = !overlap({ left: x, top: y, right: x + w, bottom: y + h }, yr, 10);
+      ok = !overlap({ left: x, top: y, right: x + w, bottom: y + h }, yr, 30);
     }
     if (!ok) { x = vp.x + m; y = vp.y + maxY; } // запасной угол
     no.style.left = x + 'px'; no.style.top = y + 'px';
@@ -194,6 +194,7 @@
     Array.prototype.forEach.call($('options').children, function (el, k) { el.classList.toggle('selected', k === idx); });
     $('reaction').textContent = step.options[idx].reaction;
     $('next-btn').disabled = false;
+    try { $('next-btn').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' }); } catch (e) {}
     vibrate(10); confetti(14);
   }
   $('next-btn').addEventListener('click', next);
