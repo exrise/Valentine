@@ -1,61 +1,31 @@
-# Will You Be My Valentine? 
+# Приглашение на свидание 💌
 
-This project is designed to be an interactive webpage to ask someone to be your Valentine. Please use this code as inspiration.
----
-## Respect Open-Source
-I built this for **fun & learning**. If you fork or modify it:  
-✔ **Use it for creativity, personal projects, or learning**  
-✔ **Give proper credit when using it in public**  
-✔ **Respect the original creator’s work**  
- 
+Интерактивная страница: вопрос с убегающей кнопкой «Нет», затем мини-квест (выбор кухни, колесо фортуны, дата) и «билет на свидание», который отправляется в Telegram или WhatsApp. Место свидания остаётся сюрпризом.
 
+Основано на [ivysone/Will-you-be-my-Valentine-](https://github.com/ivysone/Will-you-be-my-Valentine-) (MIT). Спасибо автору за идею.
 
+## Настройка
+Всё меняется в одном файле **`config.js`**: имя, вопрос, фразы кнопки «Нет», дата и время, шаги выбора, контакты. День недели считается сам.
 
+1. Открой `config.js` и замени `Имя`, дату, при желании шаги и варианты.
+2. В `contact.telegram` впиши свой ник без `@` (для подсказки на экране). Для WhatsApp нужен номер только цифрами, без `+`, например `79991234567`.
+3. Положи фото в `images/` (см. `images/README.txt`): `photo1.jpg`, `photo2.jpg`, `preview.jpg`. Через сайт GitHub: Add file → Upload files.
 
-## How It Works 
+## Публикация (GitHub Pages)
+Settings → Pages → Deploy from branch → выбери ветку и папку `/ (root)`. Адрес будет `https://exrise.github.io/Valentine/`. Регистр в пути важен.
 
-This project consists of a simple webpage with a "Yes" and "No" button. When the user clicks the "No" button, the button text changes to a series of  messages, and the "Yes" button grows larger. If the user clicks the "Yes" button, they are redirected to a new page (`yes_page.html`).
+Репозиторий публичный, поэтому имя и фото видны всем, у кого есть ссылка или кто зайдёт на GitHub.
 
-### Features:
-- **Interactive Buttons**: The "No" button cycles through , while the "Yes" button grows in size.
-- **Responsive Design**: The webpage is designed to work on all screen sizes.
+## Проверь перед отправкой
+- Открой ссылку **на телефоне из Telegram** (во встроенном браузере) и пройди всё до конца. Часть функций (скачивание `.ics`, буфер обмена) там может не работать. Для этого есть запасные пути: кнопка Google Календаря и поле с текстом для копирования.
+- Превью ссылки задаётся в `index.html` (теги `og:`) и кэшируется Telegram. Обновить его можно через бота @WebpageBot.
+- Кнопка Telegram открывает выбор чата с готовым текстом. Ей останется выбрать чат с тобой и нажать «отправить».
 
----
+## Запуск локально
+```bash
+python3 -m http.server 8000
+```
+Открой http://localhost:8000.
 
-## How to Use 
-
-1. **Download the Files**:
-   - Clone this repository or download the `index.html`, `styles.css`,`yes_style.css`,`yes_page.html` and `script.js` files.
-
-2. **Open the Project**:
-   - Open the `index.html` file in your web browser.
-
-
----
-
-
-## Code Overview 
-
-### Files:
-
-- `index.html`: The main HTML file that structures the webpage.
-- `styles.css`: The CSS file that styles the webpage.
-- `script.js`: The JavaScript file that handles the button interactions.
-- `yes_page.html`: The yes page that sturctures the webpage.
-- `yes_style.css`: The css file that styles the yes webpage.
-
-
-
-### Key Functions:
-
-- `handleNoClick()`: Changes the "No" button text and increases the size of the "Yes" button.
-- `handleYesClick()`: Redirects the user to `yes_page.html`.
-
----
-
-## License 📄
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
+## Лицензия
+MIT, см. [LICENSE](LICENSE).
