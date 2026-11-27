@@ -122,3 +122,5 @@ h2 { font-size: clamp(1.4rem, 6vw, 1.9rem); line-height: 1.25; margin: 0; color:
 
 .weather { margin: 0; font-size: 1.05rem; font-weight: 800; color: var(--accent); }
 @media (max-width: 340px) { .option { padding: 14px 8px; } .option .desc { font-size: .7rem; } }
+.options.one-col { grid-template-columns: 1fr; }
+.options.one-col .option { min-height: 84px; }

@@ -63,9 +63,17 @@
             <button id="next-btn" class="btn yes" type="button" disabled>Дальше</button>
         </section>
 
-        <!-- 4. Дата -->
+        <!-- 4. Выбор даты -->
+        <section id="screen-datepick" class="screen" data-screen="datepick">
+            <h2 id="datepick-title"></h2>
+            <div id="date-options" class="options one-col"></div>
+            <p id="datepick-reaction" class="reaction" aria-live="polite"></p>
+            <button id="datepick-next" class="btn yes" type="button" disabled>Дальше</button>
+        </section>
+
+        <!-- 4б. Дата (подтверждение) -->
         <section id="screen-date" class="screen" data-screen="date">
-            <h2>Когда встречаемся?</h2>
+            <h2>Договорились!</h2>
             <div class="date-card">
                 <div id="date-day" class="date-day"></div>
                 <div id="date-time" class="date-time"></div>
