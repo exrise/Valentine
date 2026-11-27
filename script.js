@@ -179,6 +179,7 @@
       var e = document.createElement('span'); e.className = 'emoji'; e.textContent = o.emoji;
       var l = document.createElement('span'); l.textContent = o.label;
       b.appendChild(e); b.appendChild(l);
+      if (o.desc) { var ds = document.createElement('span'); ds.className = 'desc'; ds.textContent = o.desc; b.appendChild(ds); }
       b.addEventListener('click', function () { choose(i, idx); });
       box.appendChild(b);
     });

@@ -70,13 +70,19 @@ h2 { font-size: clamp(1.4rem, 6vw, 1.9rem); line-height: 1.25; margin: 0; color:
 .options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 100%; }
 .option {
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
-  min-height: 92px; padding: 12px 8px;
+  min-height: 92px; padding: 14px 12px;
   background: var(--card); border: 3px solid transparent; border-radius: 16px;
   font: inherit; font-weight: 800; font-size: 1rem; color: var(--text);
   box-shadow: 0 3px 10px rgba(180,42,71,.12); cursor: pointer;
   transition: transform .15s, border-color .2s, background .2s;
 }
 .option .emoji { font-size: 2rem; line-height: 1; }
+.option .desc {
+  display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  width: 100%; min-height: 2.5em; margin-top: -2px;
+  font-size: .75rem; font-weight: 600; line-height: 1.25; text-align: center; color: #9a8a90;
+  overflow-wrap: anywhere;
+}
 .option:active { transform: scale(.96); }
 .option.selected { border-color: var(--accent); background: #fff0f3; animation: pop .4s ease; }
 @keyframes pop { 50% { transform: scale(1.08); } }
@@ -115,3 +121,4 @@ h2 { font-size: clamp(1.4rem, 6vw, 1.9rem); line-height: 1.25; margin: 0; color:
 }
 
 .weather { margin: 0; font-size: 1.05rem; font-weight: 800; color: var(--accent); }
+@media (max-width: 340px) { .option { padding: 14px 8px; } .option .desc { font-size: .7rem; } }
