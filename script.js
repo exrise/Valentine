@@ -333,18 +333,24 @@
 
     var text = messageText(), enc = encodeURIComponent(text);
     var site = location.href.split('#')[0];
-    $('send-tg').href = 'https://t.me/share/url?url=' + encodeURIComponent(site) + '&text=' + enc;
+    var tg = (C.contact.telegram || '').replace(/^@/, '');
+    $('send-tg').href = tg
+      ? 'https://t.me/' + encodeURIComponent(tg) + '?text=' + enc
+      : 'https://t.me/share/url?url=' + encodeURIComponent(site) + '&text=' + enc;
     var wa = (C.contact.whatsapp || '').replace(/\D/g, '');
     $('send-wa').hidden = !wa;
     if (wa) $('send-wa').href = 'https://wa.me/' + wa + '?text=' + enc;
     $('send-hint').textContent = C.contact.telegram
-      ? 'Отправь мне итог: в Telegram выбери чат с @' + C.contact.telegram + ' и нажми «отправить».'
+      ? 'Нажми кнопку — откроется чат со мной с готовым текстом, останется только «отправить». Если текст не вставился, он уже скопирован — просто вставь.'
       : 'Отправь мне итог — в Telegram просто выбери чат со мной.';
     $('cal-google').href = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent('Свидание 💕') +
       '&dates=' + floating(start) + '/' + floating(end) + '&details=' + encodeURIComponent(choicesLines().join('\n')) +
       '&location=' + encodeURIComponent('Сюрприз');
     $('copy-area').value = text; $('copy-area').hidden = true;
   }
+  $('send-tg').addEventListener('click', function () {
+    try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText($('copy-area').value); } catch (e) {}
+  });
   $('copy-btn').addEventListener('click', function () {
     var area = $('copy-area'), text = area.value, btn = $('copy-btn');
     function done() { btn.textContent = 'Скопировано ✅'; setTimeout(function () { btn.textContent = 'Скопировать текст 📋'; }, 2000); }
