@@ -1,0 +1,14 @@
+{
+  "name": "Для Айым 💌",
+  "short_name": "Для Айым",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fde8ec",
+  "theme_color": "#fde8ec",
+  "lang": "ru",
+  "icons": [
+    { "src": "images/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "images/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

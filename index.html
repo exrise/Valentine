@@ -12,6 +12,14 @@
     <meta property="og:image" content="https://exrise.github.io/Valentine/images/preview.jpg">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="theme-color" content="#fde8ec">
+    <!-- Установка на экран «Домой» (iPhone: Safari → Поделиться → На экран «Домой») -->
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="images/icon-180.png">
+    <link rel="icon" type="image/png" href="images/icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Для Айым">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap" rel="stylesheet">
@@ -62,6 +70,7 @@
                 <div id="date-day" class="date-day"></div>
                 <div id="date-time" class="date-time"></div>
             </div>
+            <p id="date-weather" class="weather" hidden></p>
             <p id="date-note" class="lead"></p>
             <button id="date-ok" class="btn yes" type="button">Договорились 💕</button>
         </section>
