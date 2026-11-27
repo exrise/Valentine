@@ -211,11 +211,12 @@
       wctx.fillStyle = COLORS[i % COLORS.length]; wctx.fill();
       wctx.lineWidth = 3; wctx.strokeStyle = '#fff'; wctx.stroke();
       wctx.save(); wctx.rotate(a0 + seg / 2); wctx.textAlign = 'right'; wctx.textBaseline = 'middle';
-      wctx.fillStyle = '#4a2030'; wctx.font = '800 38px Nunito, system-ui, sans-serif';
-      wctx.fillText(opts[i].emoji, R - 28, 0);
-      wctx.font = '800 26px Nunito, system-ui, sans-serif';
-      var lbl = opts[i].label.length > 11 ? opts[i].label.slice(0, 10) + '…' : opts[i].label;
-      wctx.fillText(lbl, R - 84, 0);
+      var many = n > 10, eSize = many ? 34 : 38, tSize = many ? 20 : 26, maxLen = many ? 12 : 11;
+      wctx.fillStyle = '#4a2030'; wctx.font = '800 ' + eSize + 'px Nunito, system-ui, sans-serif';
+      wctx.fillText(opts[i].emoji, R - 22, 0);
+      wctx.font = '800 ' + tSize + 'px Nunito, system-ui, sans-serif';
+      var lbl = opts[i].label.length > maxLen ? opts[i].label.slice(0, maxLen - 1) + '…' : opts[i].label;
+      wctx.fillText(lbl, R - (many ? 70 : 84), 0);
       wctx.restore();
     }
     wctx.restore();
