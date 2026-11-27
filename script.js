@@ -199,7 +199,6 @@
       box.appendChild(b);
     });
     $('reaction').textContent = cur !== undefined ? step.options[cur].reaction : '';
-    showTask(cur !== undefined ? step.options[cur] : null);
     $('random-btn').hidden = !step.allowRandom;
     $('next-btn').disabled = cur === undefined;
     wheelStep = i;
@@ -209,7 +208,6 @@
     state.answers[step.id] = idx; save();
     Array.prototype.forEach.call($('options').children, function (el, k) { el.classList.toggle('selected', k === idx); });
     $('reaction').textContent = step.options[idx].reaction;
-    showTask(step.options[idx]);
     $('next-btn').disabled = false;
     try { $('next-btn').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' }); } catch (e) {}
     vibrate(10); confetti(14);
@@ -323,10 +321,11 @@
       var a = state.answers[s.id]; if (a === undefined) return;
       row(dl, s.short || s.title, s.options[a].emoji + ' ' + s.options[a].label);
     });
+    var task = null;
     C.steps.forEach(function (s) {
-      var a = state.answers[s.id]; if (a === undefined || !s.options[a].makeup) return;
-      row(dl, 'Дресс-код', 'Макияж в ' + styleOf(s.options[a]) + ' стиле. ' + s.options[a].makeup);
+      var a = state.answers[s.id]; if (!task && a !== undefined && s.options[a].makeup) task = s.options[a];
     });
+    showTask(task);
     if (curWeather) row(dl, 'Погода', curWeather.emoji + ' ' + curWeather.text);
     row(dl, 'Место', C.placeText);
     if (C.afterText) row(dl, 'После ужина', C.afterText);
